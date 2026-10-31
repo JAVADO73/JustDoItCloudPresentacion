@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JustDoIt! - Reporte de tareas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Left column -->
+    <aside class="sidebar">
+
+        <!-- Logo -->
+        <div class="logo">
+            <a th:href="@{/static}">
+                <img th:src="@{/images/JustDoIt.png}"
+                     alt="JustDoIt Logo"
+                     width="200"
+                     height="200">
+            </a>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="navigation">
+            <h3>Tareas</h3>
+            <ul>
+                <li>
+                    <a th:href="@{/user/tasks}">
+                        Tareas de usuario actual
+                    </a>
+                </li>
+
+                <li>
+                    <a th:href="@{/user/tasks/report}">
+                        Reporte de tareas
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+    </aside>
+
+    <!-- Right column -->
+    <main class="content">
+
+        <h1>Reporte de tareas del usuario</h1>
+
+        <a th:href="@{/user/tasks}" class="btn-back">
+            ← Volver a tareas de usuario
+        </a>
+
+        <!-- User information -->
+        <div th:replace="~{fragments/user-info :: userInfo(${user})}"></div>
+
+        <!-- Tasks report -->
+        <h2>Reporte de tareas</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Tarea</th>
+                <th>Estado</th>
+                <th>Fecha Límite</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="task : ${user.tasks}">
+
+                <td th:text="${task.description}">
+                    Nombre de tarea
+                </td>
+
+                <td>
+                        <span th:switch="${task.status}">
+
+                            <span th:case="'PENDING'">
+                                Pendiente
+                            </span>
+
+                            <span th:case="'INPROGRESS'">
+                                En progreso
+                            </span>
+
+                            <span th:case="'DONE'">
+                                Completada
+                            </span>
+
+                        </span>
+                </td>
+
+                <td>
+                        <span th:if="${task.deadline != null}"
+                              th:text="${#temporals.format(task.deadline, 'dd/MM/yyyy')}">
+                            Fecha límite
+                        </span>
+
+                    <span th:if="${task.deadline == null}">
+                            No especificada
+                        </span>
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(user.tasks)}">
+                <td colspan="3">
+                    No hay tareas registradas.
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </main>
+
+</div>
+
+</body>
+</html>
